@@ -10,7 +10,7 @@ import {
 import { LinkService } from './link.service';
 import { CreateLinkRequest, CreateLinkResponse } from './link.dto';
 
-@Controller('link')
+@Controller('')
 export class LinkController {
   constructor(private readonly linkService: LinkService) {}
 
