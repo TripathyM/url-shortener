@@ -58,4 +58,32 @@ describe('LinkService', () => {
       expect(response).toEqual(expectedResponse);
     });
   });
+
+  describe('getActualUrl', () => {
+    it('should return the stored full URL for the given short link', async () => {
+      const requestedSlug = 'some-slug';
+      when(mockLinkRepository.findOneBy)
+        .calledWith({
+          id: EncoderUtils.decode(requestedSlug),
+        })
+        .mockResolvedValue({ actualUrl: 'https://www.google.com' } as Link);
+
+      const actualUrl = await service.getActalUrl(requestedSlug);
+
+      expect(actualUrl).toEqual('https://www.google.com');
+    });
+
+    it('should throw an error if the short link is not found', async () => {
+      const requestedSlug = 'does-not-exist';
+      when(mockLinkRepository.findOneBy)
+        .calledWith({
+          id: EncoderUtils.decode(requestedSlug),
+        })
+        .mockResolvedValue(null);
+
+      await expect(service.getActalUrl(requestedSlug)).rejects.toThrow(
+        'Link not found',
+      );
+    });
+  });
 });

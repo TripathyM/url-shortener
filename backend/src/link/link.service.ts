@@ -29,4 +29,16 @@ export class LinkService {
       shortUrl: `${process.env.BASE_URL}/${slug}`,
     };
   }
+
+  async getActalUrl(requestedSlug: string): Promise<string> {
+    const link = await this.linkRepository.findOneBy({
+      id: EncoderUtils.decode(requestedSlug),
+    });
+
+    if (!link) {
+      throw new Error('Link not found'); // Map this exception later
+    }
+
+    return link.actualUrl;
+  }
 }
