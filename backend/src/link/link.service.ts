@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateLinkRequest, CreateLinkResponse } from './link.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Link } from './link.entity';
@@ -24,6 +24,8 @@ export class LinkService {
       slug,
     });
 
+    Logger.log(`Created short link: ${slug} for ${actualUrl}`);
+
     return {
       actualUrl,
       shortUrl: `${process.env.BASE_URL}/${slug}`,
@@ -31,12 +33,13 @@ export class LinkService {
   }
 
   async getActalUrl(requestedSlug: string): Promise<string> {
+    Logger.log(`Requested slug: ${requestedSlug}`);
     const link = await this.linkRepository.findOneBy({
       id: EncoderUtils.decode(requestedSlug),
     });
 
     if (!link) {
-      throw new Error('Link not found'); // Map this exception later
+      throw new Error('Link not found'); // TODO Map this exception later
     }
 
     return link.actualUrl;
