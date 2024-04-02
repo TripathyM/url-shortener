@@ -19,6 +19,7 @@ import { AppController } from './app.controller';
         database: configService.get('DB_NAME') || 'urlsshortenerdb',
         autoLoadEntities: true,
         synchronize: true,
+        ssl: configService.get('DB_SSL') === 'true',
       }),
     }),
     LinkModule,
