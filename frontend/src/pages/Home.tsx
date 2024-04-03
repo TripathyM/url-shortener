@@ -1,5 +1,6 @@
 import { Button, Link, TextField } from "@mui/material";
 import { useState } from "react";
+import config from "../config/config";
 
 const Home = () => {
   const [actualUrl, setActualUrl] = useState<string>("");
@@ -7,8 +8,7 @@ const Home = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("submitting", actualUrl);
-    fetch(`http://localhost:3000/link`, {
+    fetch(config.BACKEND_BASE_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,6 +30,7 @@ const Home = () => {
           label="Enter URL"
           variant="outlined"
           value={actualUrl}
+          fullWidth
           onChange={(e) => setActualUrl(e.target.value)}
         />
         <Button type="submit" variant="contained">
