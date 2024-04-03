@@ -1,8 +1,23 @@
-import { Button, Link, TextField } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardContent,
+  Container,
+  Grid,
+  Link,
+  Paper,
+  TextField,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { useState } from "react";
 import config from "../config/config";
 
 const Home = () => {
+  const theme = useTheme();
+  const isXsScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
   const [actualUrl, setActualUrl] = useState<string>("");
   const [shortUrl, setShortUrl] = useState<string>("");
 
@@ -24,24 +39,57 @@ const Home = () => {
   };
 
   return (
-    <>
-      <form aria-label="urls-form" onSubmit={handleSubmit}>
-        <TextField
-          label="Enter URL"
-          variant="outlined"
-          value={actualUrl}
-          fullWidth
-          onChange={(e) => setActualUrl(e.target.value)}
-        />
-        <Button type="submit" variant="contained">
-          Shorten
-        </Button>
+    <Container>
+      <Paper elevation={2}>
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              URL Shortener
+            </Typography>
+            <form
+              noValidate
+              autoComplete="off"
+              aria-label="urls-form"
+              onSubmit={handleSubmit}
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={10}>
+                  <TextField
+                    label="Enter URL"
+                    variant="outlined"
+                    placeholder="Enter your long link here"
+                    value={actualUrl}
+                    onChange={(e) => setActualUrl(e.target.value)}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2} container justifyContent={isXsScreen ? "center": "flex-start"}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{ height: "54px" }}
+                  >
+                    Shorten
+                  </Button>
+                </Grid>
 
-        <Link href={shortUrl} target="_blank">
-          {shortUrl}
-        </Link>
-      </form>
-    </>
+                {shortUrl && (
+                  <Grid item xs={12}>
+                    <Typography variant="body1" display="inline">
+                      Shortened URL:{" "}
+                    </Typography>
+
+                    <Link href={shortUrl} target="_blank">
+                      {shortUrl}
+                    </Link>
+                  </Grid>
+                )}
+              </Grid>
+            </form>
+          </CardContent>
+        </Card>
+      </Paper>
+    </Container>
   );
 };
 
