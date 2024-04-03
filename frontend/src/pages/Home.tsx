@@ -15,7 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import config from "../config/config";
 import RecentLinks from "../components/RecentLinks";
-import validator from "validator";
+import isURL from 'validator/es/lib/isURL';
 
 // Manish - Move to separate types file
 type LinksResponse = {
@@ -39,7 +39,7 @@ const Home = () => {
   }, [shortUrl]);
 
   useEffect(() => {
-    setIsValidUrl(validator.isURL(actualUrl));
+    setIsValidUrl(isURL(actualUrl));
   }, [actualUrl]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
