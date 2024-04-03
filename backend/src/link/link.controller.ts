@@ -8,7 +8,7 @@ import {
   Redirect,
 } from '@nestjs/common';
 import { LinkService } from './link.service';
-import { CreateLinkRequest, CreateLinkResponse } from './link.dto';
+import { CreateLinkRequest, LinkResponse } from './link.dto';
 
 @Controller('')
 export class LinkController {
@@ -17,8 +17,13 @@ export class LinkController {
   @Post()
   createShortLink(
     @Body() createShortLinkRequest: CreateLinkRequest,
-  ): Promise<CreateLinkResponse> {
+  ): Promise<LinkResponse> {
     return this.linkService.createShortLink(createShortLinkRequest);
+  }
+
+  @Get('recentLinks')
+  async getRecentShortLinks(): Promise<LinkResponse[]> {
+    return this.linkService.getRecentShortLinks();
   }
 
   @Get(':slug')

@@ -5,7 +5,7 @@ import { when } from 'jest-when';
 import { InsertResult, Repository, UpdateResult } from 'typeorm';
 import { Link } from './link.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { CreateLinkRequest, CreateLinkResponse } from './link.dto';
+import { CreateLinkRequest, LinkResponse } from './link.dto';
 import { EncoderUtils } from '../utils/encoder.utilty';
 
 describe('LinkService', () => {
@@ -50,7 +50,7 @@ describe('LinkService', () => {
 
       const response = await service.createShortLink(request);
 
-      const expectedResponse: CreateLinkResponse = {
+      const expectedResponse: LinkResponse = {
         actualUrl: request.actualUrl,
         shortUrl: `${process.env.BASE_URL}/${EncoderUtils.encode(mockSavedRecordId)}`,
       };
@@ -83,6 +83,34 @@ describe('LinkService', () => {
 
       await expect(service.getActalUrl(requestedSlug)).rejects.toThrow(
         'Link not found',
+      );
+    });
+  });
+
+  describe('getRecentShortLinks', () => {
+    it('should return 10 most recently created short links', async () => {
+      const mockLinks: Link[] = Array.from({ length: 10 }).map(
+        (_, index) =>
+          ({
+            id: index + 1,
+            actualUrl: 'https://www.google.com',
+            slug: EncoderUtils.encode(index + 1),
+          }) as Link,
+      );
+      when(mockLinkRepository.find)
+        .calledWith({
+          order: { createdAt: 'DESC' },
+          take: 10,
+        })
+        .mockResolvedValue(mockLinks);
+
+      const recentLinks = await service.getRecentShortLinks();
+
+      expect(recentLinks).toEqual(
+        mockLinks.map((link) => ({
+          actualUrl: link.actualUrl,
+          shortUrl: `${process.env.BASE_URL}/${link.slug}`,
+        })),
       );
     });
   });

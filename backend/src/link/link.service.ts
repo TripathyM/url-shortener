@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CreateLinkRequest, CreateLinkResponse } from './link.dto';
+import { CreateLinkRequest, LinkResponse } from './link.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Link } from './link.entity';
 import { Repository } from 'typeorm';
@@ -13,7 +13,7 @@ export class LinkService {
 
   async createShortLink({
     actualUrl,
-  }: CreateLinkRequest): Promise<CreateLinkResponse> {
+  }: CreateLinkRequest): Promise<LinkResponse> {
     const { identifiers } = await this.linkRepository.insert({
       actualUrl,
       slug: 'PENDING', // This is an intermediate value and will be updated to a unique slug later.
@@ -43,5 +43,19 @@ export class LinkService {
     }
 
     return link.actualUrl;
+  }
+
+  async getRecentShortLinks(): Promise<LinkResponse[]> {
+    const links = await this.linkRepository.find({
+      order: {
+        createdAt: 'DESC',
+      },
+      take: 10,
+    });
+
+    return links.map(({ actualUrl, slug }) => ({
+      actualUrl,
+      shortUrl: `${process.env.BASE_URL}/${slug}`,
+    }));
   }
 }

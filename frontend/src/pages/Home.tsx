@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   Container,
+  Divider,
   Grid,
   Link,
   Paper,
@@ -11,15 +12,29 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import config from "../config/config";
+import RecentLinks from "../components/RecentLinks";
+
+// Manish - Move to separate types file
+type LinksResponse = {
+  actualUrl: string;
+  shortUrl: string;
+};
 
 const Home = () => {
   const theme = useTheme();
-  const isXsScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isXsScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [actualUrl, setActualUrl] = useState<string>("");
   const [shortUrl, setShortUrl] = useState<string>("");
+  const [recentUrls, setRecentUrls] = useState<LinksResponse[]>([]);
+
+  useEffect(() => {
+    fetch(`${config.BACKEND_BASE_URL}/recentLinks`)
+      .then((res) => res.json())
+      .then(setRecentUrls);
+  }, [shortUrl]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,7 +55,7 @@ const Home = () => {
 
   return (
     <Container>
-      <Paper elevation={2}>
+      <Paper elevation={2} data-testid="url-shortener-section">
         <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>
@@ -63,7 +78,13 @@ const Home = () => {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={12} sm={2} container justifyContent={isXsScreen ? "center": "flex-start"}>
+                <Grid
+                  item
+                  xs={12}
+                  sm={2}
+                  container
+                  justifyContent={isXsScreen ? "center" : "flex-start"}
+                >
                   <Button
                     type="submit"
                     variant="contained"
@@ -89,6 +110,9 @@ const Home = () => {
           </CardContent>
         </Card>
       </Paper>
+
+      <Divider sx={{ my: 2 }} />
+      <RecentLinks recentUrls={recentUrls}/>
     </Container>
   );
 };
