@@ -28,6 +28,20 @@ describe("Home Page", () => {
       expect(button).toBeVisible();
     });
 
+    it("should disable the submit button when the input is not valid URL", async () => {
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve([]), // Mock recent links
+        })
+      ) as jest.Mock;
+
+      render(<Home />);
+
+      const button = await screen.findByRole("button", { name: "Shorten" });
+      expect(button).toBeDisabled();
+    })
+
     it("should make an API call to shorten the URL when the form is submitted", async () => {
       global.fetch = jest
         .fn()

@@ -29,12 +29,22 @@ const Home = () => {
   const [actualUrl, setActualUrl] = useState<string>("");
   const [shortUrl, setShortUrl] = useState<string>("");
   const [recentUrls, setRecentUrls] = useState<LinksResponse[]>([]);
+  const [isValidUrl, setIsValidUrl] = useState<boolean>(false);
 
   useEffect(() => {
     fetch(`${config.BACKEND_BASE_URL}/recentLinks`)
       .then((res) => res.json())
       .then(setRecentUrls);
   }, [shortUrl]);
+
+  useEffect(() => {
+    try {
+      new URL(actualUrl);
+      setIsValidUrl(true);
+    } catch (e) {
+      setIsValidUrl(false);
+    }
+  }, [actualUrl]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -72,7 +82,7 @@ const Home = () => {
                   <TextField
                     label="Enter URL"
                     variant="outlined"
-                    placeholder="Enter your long link here"
+                    placeholder="Enter your long link starting with http:// or https://"
                     value={actualUrl}
                     onChange={(e) => setActualUrl(e.target.value)}
                     fullWidth
@@ -89,6 +99,7 @@ const Home = () => {
                     type="submit"
                     variant="contained"
                     sx={{ height: "54px" }}
+                    disabled={!isValidUrl}
                   >
                     Shorten
                   </Button>
@@ -112,7 +123,7 @@ const Home = () => {
       </Paper>
 
       <Divider sx={{ my: 2 }} />
-      <RecentLinks recentUrls={recentUrls}/>
+      <RecentLinks recentUrls={recentUrls} />
     </Container>
   );
 };
