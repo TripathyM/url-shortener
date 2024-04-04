@@ -14,12 +14,12 @@ const HowItWorks = () => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="body1" fontSize={{ xs: 17, sm: 20 }} gutterBottom>
+        <Typography variant="body1" fontSize={{ xs: 12, sm: 20 }} gutterBottom>
           This is a simple URL shortener service. Just paste the URL you want to
           shorten and click on the shorten button. You will get a shortened URL
           that you can use to access the original URL.
         </Typography>
-        <Typography variant="body1" fontSize={{ xs: 17, sm: 20 }} gutterBottom>
+        <Typography variant="body1" fontSize={{ xs: 12, sm: 20 }} gutterBottom>
           Internally this service generates a unique slug for the long URL. It
           is generated using a base62 encoding of the DB identifier and is
           always 5 characters long. When a user accesses the shortened URL, the
@@ -27,7 +27,7 @@ const HowItWorks = () => {
           the original URL.
         </Typography>
 
-        <Typography variant="body1" fontSize={{ xs: 17, sm: 20 }} gutterBottom>
+        <Typography variant="body1" fontSize={{ xs: 12, sm: 20 }} gutterBottom>
           {`More details about the implementation can be found in this `}
           <Link
             href="https://github.com/mtripathy-palo/url-shortener"

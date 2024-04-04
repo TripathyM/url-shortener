@@ -9,7 +9,7 @@ import {
   alpha,
   useTheme,
 } from "@mui/material";
-import URLSho from "../components/URLShortener";
+import URLShortener from "../components/URLShortener";
 import { useEffect, useState } from "react";
 import AddLinkIcon from "@mui/icons-material/AddLink";
 import ConstructionIcon from "@mui/icons-material/Construction";
@@ -96,7 +96,7 @@ const NewHome = () => {
               height: "100%",
             }}
           >
-            {value === 1 && <URLSho />}
+            {value === 1 && <URLShortener />}
             {value === 2 && <HowItWorks />}
             {value === 3 && <AboutMe />}
           </Paper>

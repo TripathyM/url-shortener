@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import isURL from "validator/es/lib/isURL";
 import config from "../config/config";
 
-const URLSho = () => {
+const URLShortener = () => {
   const [actualUrl, setActualUrl] = useState<string>("");
   const [shortUrl, setShortUrl] = useState<string>("");
   const [isValidUrl, setIsValidUrl] = useState<boolean>(false);
@@ -130,4 +130,4 @@ const URLSho = () => {
   );
 };
 
-export default URLSho;
+export default URLShortener;
