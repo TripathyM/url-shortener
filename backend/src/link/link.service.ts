@@ -14,6 +14,16 @@ export class LinkService {
   async createShortLink({
     actualUrl,
   }: CreateLinkRequest): Promise<LinkResponse> {
+    const existingLink = await this.linkRepository.findOneBy({
+      actualUrl,
+    });
+    if (existingLink) {
+      return {
+        actualUrl,
+        shortUrl: `${process.env.BASE_URL}/${existingLink.slug}`,
+      };
+    }
+
     const { identifiers } = await this.linkRepository.insert({
       actualUrl,
       slug: 'PENDING', // This is an intermediate value and will be updated to a unique slug later.

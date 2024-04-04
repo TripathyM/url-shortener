@@ -57,6 +57,28 @@ describe('LinkService', () => {
 
       expect(response).toEqual(expectedResponse);
     });
+
+    it('should return the short link if it already exists', async () => {
+      const request: CreateLinkRequest = { actualUrl: 'https://google.com' };
+
+      when(mockLinkRepository.findOneBy)
+        .calledWith({
+          actualUrl: request.actualUrl,
+        })
+        .mockResolvedValue({
+          actualUrl: request.actualUrl,
+          slug: 'abcde',
+        } as Link);
+
+      const response = await service.createShortLink(request);
+
+      const expectedResponse: LinkResponse = {
+        actualUrl: request.actualUrl,
+        shortUrl: `${process.env.BASE_URL}/abcde`,
+      };
+
+      expect(response).toEqual(expectedResponse);
+    });
   });
 
   describe('getActualUrl', () => {
