@@ -47,8 +47,8 @@ const NewHome = () => {
       <Box
         sx={{
           position: "absolute",
-          height: 0.4,
-          width: "calc(100% - 400px)",
+          height:  { xs: '0.7', md: '0.4' },
+          width: '80%',
           top: "40%",
           left: "50%",
           transform: "translate(-50%, -50%)",
