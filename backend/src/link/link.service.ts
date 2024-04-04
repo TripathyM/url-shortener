@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { CreateLinkRequest, LinkResponse } from './link.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Link } from './link.entity';
@@ -34,12 +34,21 @@ export class LinkService {
 
   async getActalUrl(requestedSlug: string): Promise<string> {
     Logger.log(`Requested slug: ${requestedSlug}`);
-    const link = await this.linkRepository.findOneBy({
-      id: EncoderUtils.decode(requestedSlug),
-    });
+    let link: Link | null = null;
+    try {
+      link = await this.linkRepository.findOneBy({
+        id: EncoderUtils.decode(requestedSlug),
+      });
+    } catch (error) {
+      Logger.error(
+        `Error while fetching link for slug: ${requestedSlug}`,
+        error,
+      );
+      throw new HttpException('Link not found', HttpStatus.NOT_FOUND);
+    }
 
     if (!link) {
-      throw new Error('Link not found'); // TODO Map this exception later
+      throw new HttpException('Link not found', HttpStatus.NOT_FOUND);
     }
 
     return link.actualUrl;
