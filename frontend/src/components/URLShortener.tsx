@@ -106,7 +106,7 @@ const URLSho = () => {
       </Grid>
 
       {shortUrl && (
-        <Grid item xs={12} sx={{ mt: "20px" }}>
+        <Grid item xs={12}>
           <Typography variant="body1" fontSize={20} display="inline">
             Shortened URL:{" "}
           </Typography>
