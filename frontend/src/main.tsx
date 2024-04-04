@@ -7,7 +7,6 @@ import "@fontsource/roboto/700.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./pages/Home.tsx";
 import { CssBaseline, ThemeProvider, alpha, createTheme } from "@mui/material";
-import NewHome from "./pages/NewHome.tsx";
 import { colors } from "./config/color.ts";
 
 const theme = createTheme({
@@ -24,7 +23,7 @@ const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: alpha(colors.primary.main, 0.2)
+          backgroundColor: alpha(colors.primary.main, 0.2),
         },
       },
     },
@@ -34,10 +33,6 @@ const theme = createTheme({
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <NewHome />,
-  },
-  {
-    path: "/old",
     element: <Home />,
   },
 ]);

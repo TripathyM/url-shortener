@@ -2,6 +2,9 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import Home from "../Home";
+import isURL from "validator/es/lib/isURL";
+
+jest.mock("validator/es/lib/isURL", () => jest.fn(() => true));
 
 jest.mock("../../config/config", () => ({
   BACKEND_BASE_URL: "http://backend.addr",
@@ -9,46 +12,51 @@ jest.mock("../../config/config", () => ({
 
 describe("Home Page", () => {
   describe("URL Shortening section", () => {
-    it("should render a form with a text input for actual url and a submit button", async () => {
+    it.only("should render a form with a text input for actual url and a submit button", async () => {
       global.fetch = jest.fn(() =>
         Promise.resolve({
           ok: true,
-          json: () => Promise.resolve([]), // Mock recent links
+          json: () => Promise.resolve(),
         })
       ) as jest.Mock;
 
       render(<Home />);
 
-      const form = screen.getByRole("form");
+      const form = await screen.findByRole("form");
       expect(form).toBeInTheDocument();
-      const input = screen.getByLabelText("Enter URL");
+      const input = screen.getByPlaceholderText(
+        "Enter your long link starting with http:// or https:// to enable the button"
+      );
       expect(input).toBeVisible();
       expect(input).toHaveAttribute("type", "text");
-      const button = await screen.findByRole("button", { name: "Shorten" });
+      const button = await screen.findByRole("button", { name: "Shorten URL" });
       expect(button).toBeVisible();
     });
 
-    it("should disable the submit button when the input is not valid URL", async () => {
+    it.only("should disable the submit button when the input is not valid URL", async () => {
+      (isURL as jest.Mock).mockImplementation(() => false);
+
       global.fetch = jest.fn(() =>
         Promise.resolve({
           ok: true,
-          json: () => Promise.resolve([]), // Mock recent links
+          json: () => Promise.resolve(),
         })
       ) as jest.Mock;
 
       render(<Home />);
 
-      const button = await screen.findByRole("button", { name: "Shorten" });
+      const button = await screen.findByRole("button", { name: "Shorten URL" });
       expect(button).toBeDisabled();
-    })
+    });
 
-    it("should make an API call to shorten the URL when the form is submitted", async () => {
+    it.only("should make an API call to shorten the URL when the form is submitted", async () => {
+      (isURL as jest.Mock).mockImplementation(() => true);
       global.fetch = jest
         .fn()
         .mockImplementationOnce(() =>
           Promise.resolve({
             ok: true,
-            json: () => Promise.resolve([]), // Mock recent links
+            json: () => Promise.resolve(), // Mock recent links
           })
         )
         .mockImplementationOnce(() =>
@@ -59,24 +67,20 @@ describe("Home Page", () => {
                 shortUrl: "http://backend.addr/abcde",
               }),
           })
-        )
-        .mockImplementationOnce(() =>
-          Promise.resolve({
-            ok: true,
-            json: () => Promise.resolve([]), // Mock recent links
-          })
-        )
+        );
 
       render(<Home />);
 
-      const input = screen.getByLabelText("Enter URL");
+      const input = await screen.findByPlaceholderText(
+        "Enter your long link starting with http:// or https:// to enable the button"
+      );
       await userEvent.type(input, "https://www.example.com");
 
-      const button = await screen.findByRole("button", { name: "Shorten" });
+      const button = await screen.findByRole("button", { name: "Shorten URL" });
       await userEvent.click(button);
 
       await waitFor(() => {
-        expect(fetch).toHaveBeenCalledTimes(3); // 1 for recent links, 1 for shortening, 1 for recent links
+        expect(fetch).toHaveBeenCalledTimes(2); // 1 for health, 1 for shortening
       });
       expect(fetch).toHaveBeenCalledWith("http://backend.addr", {
         method: "POST",
@@ -87,13 +91,14 @@ describe("Home Page", () => {
       });
     });
 
-    it("should show the shortened url when the form is submitted", async () => {
+    it.only("should show the shortened url when the form is submitted", async () => {
+      (isURL as jest.Mock).mockImplementation(() => true);
       global.fetch = jest
         .fn()
         .mockImplementationOnce(() =>
           Promise.resolve({
             ok: true,
-            json: () => Promise.resolve([]), // Mock recent links
+            json: () => Promise.resolve(), // Mock recent links
           })
         )
         .mockImplementationOnce(() =>
@@ -104,64 +109,25 @@ describe("Home Page", () => {
                 shortUrl: "http://backend.addr/abcde",
               }),
           })
-        )
-        .mockImplementationOnce(() =>
-          Promise.resolve({
-            ok: true,
-            json: () => Promise.resolve([]), // Mock recent links
-          })
-        )
+        );
 
       render(<Home />);
 
-      const input = screen.getByLabelText("Enter URL");
+      const input = await screen.findByPlaceholderText(
+        "Enter your long link starting with http:// or https:// to enable the button"
+      );
       await userEvent.type(input, "https://www.example.com");
 
-      const button = screen.getByRole("button", { name: "Shorten" });
+      const button = screen.getByRole("button", { name: "Shorten URL" });
       await userEvent.click(button);
 
       await waitFor(() => {
-        const link =  screen.getByRole("link", {
+        const link = screen.getByRole("link", {
           name: "http://backend.addr/abcde",
         });
         expect(link).toBeVisible();
         expect(link.getAttribute("href")).toBe("http://backend.addr/abcde");
       });
-    });
-  });
-
-  describe("Recent Links section", () => {
-    it("should show the top 10 recent links", async () => {
-      const mockedLinks = [
-        {
-          actualUrl: "https://www.example1.com",
-          shortUrl: "http://backend.addr/abcde",
-        },
-        {
-          actualUrl: "https://www.example2.com",
-          shortUrl: "http://backend.addr/lishg",
-        },
-      ];
-      global.fetch = jest.fn(() =>
-        Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve(mockedLinks),
-        })
-      ) as jest.Mock;
-
-      render(<Home />);
-
-      const link1 = await screen.findByRole("link", {
-        name: mockedLinks[0].shortUrl,
-      });
-      expect(link1).toBeVisible();
-      expect(link1.getAttribute("href")).toBe(mockedLinks[0].shortUrl);
-      expect(screen.getByText(mockedLinks[0].actualUrl)).toBeVisible();
-
-      const link2 = screen.getByRole("link", { name: mockedLinks[1].shortUrl });
-      expect(link2).toBeVisible();
-      expect(link2.getAttribute("href")).toBe(mockedLinks[1].shortUrl);
-      expect(screen.getByText(mockedLinks[1].actualUrl)).toBeVisible();
     });
   });
 });
