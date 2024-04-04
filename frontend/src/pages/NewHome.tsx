@@ -72,14 +72,19 @@ const NewHome = () => {
             transform: "translate(-50%, -50%)",
           }}
         >
-          <Tabs value={value} onChange={handleChange} variant="scrollable" scrollButtons="auto">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            variant="scrollable"
+            scrollButtons="auto"
+          >
             {tabs.map((tab) => (
               <Tab
                 key={tab.value}
                 icon={tab.icon}
                 label={tab.label}
                 value={tab.value}
-                sx={{ fontSize: "1.2rem", py: 2 }}
+                sx={{ fontSize: "0.8rem", py: 2 }}
               />
             ))}
           </Tabs>
