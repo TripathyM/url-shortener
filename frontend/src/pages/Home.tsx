@@ -10,18 +10,14 @@ import {
   TextField,
   Typography,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import config from "../config/config";
+import isURL from "validator/es/lib/isURL";
+import Loader from "../components/Loader";
 import RecentLinks from "../components/RecentLinks";
-import isURL from 'validator/es/lib/isURL';
-
-// Manish - Move to separate types file
-type LinksResponse = {
-  actualUrl: string;
-  shortUrl: string;
-};
+import config from "../config/config";
+import { LinksResponse } from "../types/link.types";
 
 const Home = () => {
   const theme = useTheme();
@@ -31,11 +27,19 @@ const Home = () => {
   const [shortUrl, setShortUrl] = useState<string>("");
   const [recentUrls, setRecentUrls] = useState<LinksResponse[]>([]);
   const [isValidUrl, setIsValidUrl] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    setIsLoading(true);
     fetch(`${config.BACKEND_BASE_URL}/recentLinks`)
       .then((res) => res.json())
-      .then(setRecentUrls);
+      .then((data) => {
+        setRecentUrls(data);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
   }, [shortUrl]);
 
   useEffect(() => {
@@ -59,68 +63,76 @@ const Home = () => {
     });
   };
 
+  
+
   return (
-    <Container>
-      <Paper elevation={2} data-testid="url-shortener-section">
-        <Card>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
-              URL Shortener
-            </Typography>
-            <form
-              noValidate
-              autoComplete="off"
-              aria-label="urls-form"
-              onSubmit={handleSubmit}
-            >
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={10}>
-                  <TextField
-                    label="Enter URL"
-                    variant="outlined"
-                    placeholder="Enter your long link starting with http:// or https://"
-                    value={actualUrl}
-                    onChange={(e) => setActualUrl(e.target.value)}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={2}
-                  container
-                  justifyContent={isXsScreen ? "center" : "flex-start"}
+    <>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Container>
+          <Paper elevation={2} data-testid="url-shortener-section">
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  URL Shortener
+                </Typography>
+                <form
+                  noValidate
+                  autoComplete="off"
+                  aria-label="urls-form"
+                  onSubmit={handleSubmit}
                 >
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{ height: "54px" }}
-                    disabled={!isValidUrl}
-                  >
-                    Shorten
-                  </Button>
-                </Grid>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={10}>
+                      <TextField
+                        label="Enter URL"
+                        variant="outlined"
+                        placeholder="Enter your long link starting with http:// or https://"
+                        value={actualUrl}
+                        onChange={(e) => setActualUrl(e.target.value)}
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sm={2}
+                      container
+                      justifyContent={isXsScreen ? "center" : "flex-start"}
+                    >
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        sx={{ height: "54px" }}
+                        disabled={!isValidUrl}
+                      >
+                        Shorten
+                      </Button>
+                    </Grid>
 
-                {shortUrl && (
-                  <Grid item xs={12}>
-                    <Typography variant="body1" display="inline">
-                      Shortened URL:{" "}
-                    </Typography>
+                    {shortUrl && (
+                      <Grid item xs={12}>
+                        <Typography variant="body1" display="inline">
+                          Shortened URL:{" "}
+                        </Typography>
 
-                    <Link href={shortUrl} target="_blank">
-                      {shortUrl}
-                    </Link>
+                        <Link href={shortUrl} target="_blank">
+                          {shortUrl}
+                        </Link>
+                      </Grid>
+                    )}
                   </Grid>
-                )}
-              </Grid>
-            </form>
-          </CardContent>
-        </Card>
-      </Paper>
+                </form>
+              </CardContent>
+            </Card>
+          </Paper>
 
-      <Divider sx={{ my: 2 }} />
-      <RecentLinks recentUrls={recentUrls} />
-    </Container>
+          <Divider sx={{ my: 2 }} />
+          <RecentLinks recentUrls={recentUrls} />
+        </Container>
+      )}
+    </>
   );
 };
 

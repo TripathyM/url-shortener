@@ -1,4 +1,3 @@
-// import { useEffect, useState } from "react";
 import {
   Box,
   Link,
@@ -8,22 +7,9 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-// import config from "../config/config";
+import { LinksResponse } from "../types/link.types";
 
-type LinksResponse = {
-  actualUrl: string;
-  shortUrl: string;
-};
-
-const RecentLinks = ({ recentUrls }: { recentUrls: LinksResponse[] }) => {
-  // const [recentUrls, setRecentUrls] = useState<LinksResponse[]>([]);
-
-  // useEffect(() => {
-  //   fetch(`${config.BACKEND_BASE_URL}/recentLinks`)
-  //     .then((res) => res.json())
-  //     .then(setRecentUrls);
-  // }, []);
-
+const RecentLinks = ({ recentUrls = [] }: { recentUrls: LinksResponse[] }) => {
   return (
     <Box>
       <Paper elevation={2}>
