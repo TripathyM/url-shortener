@@ -3,6 +3,7 @@ import { LinkModule } from './link/link.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
+import { Link } from './link/link.entity';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AppController } from './app.controller';
       }),
     }),
     LinkModule,
+    TypeOrmModule.forFeature([Link]), // Injected here since health check API in AppController uses this
   ],
   controllers: [AppController],
   providers: [],

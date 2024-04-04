@@ -26,7 +26,7 @@ const NewHome = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`${config.BACKEND_BASE_URL}/recentLinks`)
+    fetch(`${config.BACKEND_BASE_URL}/healthz`)
       .then((res) => res.json())
       .then(() => {
         setIsLoading(false);
