@@ -13,17 +13,17 @@ const AboutMe = () => {
       <Grid item xs={12} md={9}>
         <Typography
           variant="body1"
-          fontSize={35}
+          fontSize={{ xs: 20, sm: 35 }}
           gutterBottom
           fontWeight="bold"
         >
           About me
         </Typography>
-        <Typography variant="body1" fontSize={20} gutterBottom>
+        <Typography variant="body1" fontSize={{ xs: 17, sm: 20 }}  gutterBottom>
           I am a software consultant experienced in diverse business domains, dedicated to crafting web/mobile applications using Java/Javascript based framworks. 
           I advocate for comprehensive testing strategies, including various test types, ensuring high-quality, maintainable code from the outset.
         </Typography>
-        <Typography variant="body1" fontSize={20} gutterBottom>
+        <Typography variant="body1" fontSize={{ xs: 17, sm: 20 }}  gutterBottom>
           Currently I work as a Senior Software Engineer at Palo IT, a global innovation consultancy and agile software development company. 
         </Typography>
       </Grid>

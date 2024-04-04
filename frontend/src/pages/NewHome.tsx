@@ -72,7 +72,7 @@ const NewHome = () => {
             transform: "translate(-50%, -50%)",
           }}
         >
-          <Tabs value={value} onChange={handleChange} centered>
+          <Tabs value={value} onChange={handleChange} variant="scrollable" scrollButtons="auto">
             {tabs.map((tab) => (
               <Tab
                 key={tab.value}
