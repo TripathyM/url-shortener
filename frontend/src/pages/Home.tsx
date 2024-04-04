@@ -84,7 +84,7 @@ const Home = () => {
                 icon={tab.icon}
                 label={tab.label}
                 value={tab.value}
-                sx={{ fontSize: "0.8rem", py: 2 }}
+                sx={{ fontSize: "0.8rem", pt: { xs: 4, md: 2 }, pb: 2 }}
               />
             ))}
           </Tabs>
