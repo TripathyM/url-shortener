@@ -5,7 +5,7 @@ const AboutMe = () => {
     <Grid container direction="row-reverse">
       <Grid item xs={12} md={3}>
         <Avatar
-          src="../../public/profile.png"
+          src="/profile.png"
           alt="Your Name"
           sx={{ width: 100, height: 100, margin: 'auto' }}
         />
