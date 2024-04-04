@@ -62,6 +62,7 @@ export class LinkService {
       take: 10,
     });
 
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     return links.map(({ actualUrl, slug }) => ({
       actualUrl,
       shortUrl: `${process.env.BASE_URL}/${slug}`,

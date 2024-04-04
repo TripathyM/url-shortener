@@ -56,11 +56,13 @@ npm install && npm run dev
 
 To run the project, you need to start both the frontend and the backend. Instructions for starting each part can be found in the above sections.
 
-## Deployment
-
-The backend, frontend, and database are hosted on [Render](https://render.com/), utilizing its free tier. Due to this, instances may spin down during periods of inactivity. You can access the website [here](https://bituly.onrender.com). Please note that it might take some time for the service to wake up from inactivity - a perfect opportunity to grab a cup of tea!
-
 ## Tests
 
 - Jest and React Testing library is used to write the unit tests in this project.
 - Property based testing using [Fast-check](https://fast-check.dev/) is implemented for Encoding and decoding. This ensures high confidence on the logic since it is tested using various random combinations
+
+
+## Deployment
+
+The backend, frontend, and database are hosted on [Render](https://render.com/), utilizing its free tier. Due to this, instances may spin down during periods of inactivity. You can access the website [here](https://bituly.onrender.com). Please note that it might take some time for the service to wake up from inactivity - a perfect opportunity to grab a cup of tea!
+
