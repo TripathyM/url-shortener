@@ -10,16 +10,31 @@ import {
   useTheme,
 } from "@mui/material";
 import URLSho from "../components/URLShortener";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddLinkIcon from "@mui/icons-material/AddLink";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import PersonPinIcon from "@mui/icons-material/PersonPin";
 import HowItWorks from "../components/HowItWorks";
 import AboutMe from "../components/AboutMe";
+import config from "../config/config";
+import Loader from "../components/Loader";
 
 const NewHome = () => {
   const theme = useTheme();
   const [value, setValue] = useState(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetch(`${config.BACKEND_BASE_URL}/recentLinks`)
+      .then((res) => res.json())
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
+  }, []);
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -44,40 +59,44 @@ const NewHome = () => {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Box
-        sx={{
-          position: "absolute",
-          height:  { xs: '0.7', md: '0.4' },
-          width: '80%',
-          top: "40%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
-      >
-        <Tabs value={value} onChange={handleChange} centered>
-          {tabs.map((tab) => (
-            <Tab
-              key={tab.value}
-              icon={tab.icon}
-              label={tab.label}
-              value={tab.value}
-              sx={{ fontSize: "1.2rem", py: 2 }}
-            />
-          ))}
-        </Tabs>
-        <Paper
-          elevation={6}
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Box
           sx={{
-            borderRadius: "20px",
-            padding: "50px",
-            height: "100%",
+            position: "absolute",
+            height: { xs: "0.7", md: "0.4" },
+            width: "80%",
+            top: "40%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
           }}
         >
-          {value === 1 && <URLSho />}
-          {value === 2 && <HowItWorks />}
-          {value === 3 && <AboutMe />}
-        </Paper>
-      </Box>
+          <Tabs value={value} onChange={handleChange} centered>
+            {tabs.map((tab) => (
+              <Tab
+                key={tab.value}
+                icon={tab.icon}
+                label={tab.label}
+                value={tab.value}
+                sx={{ fontSize: "1.2rem", py: 2 }}
+              />
+            ))}
+          </Tabs>
+          <Paper
+            elevation={6}
+            sx={{
+              borderRadius: "20px",
+              padding: "50px",
+              height: "100%",
+            }}
+          >
+            {value === 1 && <URLSho />}
+            {value === 2 && <HowItWorks />}
+            {value === 3 && <AboutMe />}
+          </Paper>
+        </Box>
+      )}
     </>
   );
 };
