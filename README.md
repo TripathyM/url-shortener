@@ -17,7 +17,7 @@ The URL shortener works in the following way:
 4. When an end-user navigates to the shortened URL, the backend decodes the slug to its original DB identifier and then retrieves the original URL from the DB by querying with this decoded ID.
 5. The backend then redirects the user to the original URL.
 
-This model ensures that the URL shortening process is quick and efficient, and that users are redirected to the original URL as quickly as possible. However, the downside is that the shortened URL slugs follow a uniform structure like 'bkkka' or 'bkkk8', since the DB identifiers are sequential.
+This model ensures that the URL shortening process is quick and efficient, and that users are redirected to the original URL as quickly as possible. However, the downside is that the shortened URL slugs follow a uniform structure like 'bkkka' or 'bkkk8', since the DB identifiers are sequential. Some sort of randomization has still be implemented using multiplication with a very big prime number.
 
 ### Backend
 
