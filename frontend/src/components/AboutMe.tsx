@@ -7,7 +7,11 @@ const AboutMe = () => {
         <Avatar
           src="/profile.png"
           alt="Your Name"
-          sx={{ width: 100, height: 100, margin: "auto" }}
+          sx={{
+            width: { xs: 100, md: 100, lg: 200 },
+            height: { xs: 100, md: 100, lg: 200 },
+            margin: "auto",
+          }}
         />
       </Grid>
       <Grid item xs={12} md={9}>
