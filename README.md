@@ -66,3 +66,6 @@ To run the project, you need to start both the frontend and the backend. Instruc
 
 The backend, frontend, and database are hosted on [Render](https://render.com/), utilizing its free tier. Due to this, instances may spin down during periods of inactivity. You can access the website [here](https://bituly.onrender.com). Please note that it might take some time for the service to wake up from inactivity - a perfect opportunity to grab a cup of tea!
 
+The deployment is automated. Every commit which gets pushed to the main branch will be trigger the deployment on Render.
+If a commit gets pushed to the backend directory, then the backend pipeline is triggered on Render and so is the case for frontend.
+
