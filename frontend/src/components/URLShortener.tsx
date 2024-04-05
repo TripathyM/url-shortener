@@ -18,7 +18,13 @@ const URLShortener = () => {
   const [isValidUrl, setIsValidUrl] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsValidUrl(isURL(actualUrl));
+    setIsValidUrl(
+      isURL(actualUrl, {
+        require_valid_protocol: true,
+        protocols: ["http", "https"],
+        require_tld: true,
+      })
+    );
   }, [actualUrl]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
